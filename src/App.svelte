@@ -1,13 +1,20 @@
 <script>
   import sounds from "./sounds.json";
 
-  const sections = Object.keys(sounds).map(section => ({
-    title: section[0].toLocaleUpperCase() + section.slice(1),
-    section
-  }));
+  const sections = Object.keys(sounds).map(section => {
+    sounds[section].forEach(sound => {
+      sound.key = "x";
+      console.log(sound);
+    });
+    return {
+      title: section[0].toLocaleUpperCase() + section.slice(1),
+      section
+    };
+  });
 
   console.log(sections);
   console.log(sounds["hits"]);
+  const colors = ["#3DDC97", "#FF8C42", "#E87EA1", "#FFD046", "#C45AB3"];
   const audio = new Audio();
   function playSound(section, file) {
     const path = `sounds/${section}/${file}`;
@@ -46,7 +53,7 @@
   }
   .sound-button:hover {
     background: #fff200;
-    color: #000;
+    color: #000 !important;
   }
   .sound-button:active {
     transition: translate(5px, 5px);
@@ -60,8 +67,11 @@
 
 <div class="container">
   {#each sections as { title, section }}
-    {#each sounds[section] as { file, name }}
-      <div class="sound-button" on:mousedown={() => playSound(section, file)}>
+    {#each sounds[section] as { file, name }, i}
+      <div
+        class="sound-button"
+        on:mousedown={() => playSound(section, file)}
+        style={`color: ${colors[i % colors.length]}`}>
         <h4>{name}</h4>
         <small class="section-title">{section}</small>
       </div>
